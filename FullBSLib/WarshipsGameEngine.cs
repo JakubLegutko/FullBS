@@ -27,18 +27,101 @@ namespace FullBSLib
 
         private void PlaceShips(char[,] board)
         {
-            // Implement logic to randomly place ships on the board
-            // This is a simple example; you may want to customize ship placement.
             Random random = new Random();
-            for (int i = 0; i < 10; i++)
+
+            int[] shipLengths = { 4, 3, 3, 2, 2, 2, 1, 1, 1, 1 };
+
+            foreach (int shipLength in shipLengths)
             {
-                int row = random.Next(0, BoardSize);
-                int col = random.Next(0, BoardSize);
-                board[row, col] = 'S'; // Mark ship
+                bool shipPlaced = false;
+
+                while (!shipPlaced)
+                {
+                    int direction = random.Next(2); // 0 for horizontal, 1 for vertical
+
+                    int row = random.Next(BoardSize);
+                    int col = random.Next(BoardSize);
+
+                    if (CanPlaceShip(board, row, col, shipLength, direction))
+                    {
+                        PlaceShip(board, row, col, shipLength, direction);
+                        shipPlaced = true;
+                    }
+                }
+            }
+        }
+
+        private bool CanPlaceShip(char[,] board, int row, int col, int length, int direction)
+        {
+            if (direction == 0) // Horizontal
+            {
+                if (col + length > BoardSize)
+                {
+                    return false; // Ship goes off the board
+                }
+
+                for (int i = col; i < col + length; i++)
+                {
+                    if (board[row, i] != '\0' || IsAdjacentShip(board, row, i))
+                    {
+                        return false; // Ship intersects with another ship or is adjacent to another ship
+                    }
+                }
+            }
+            else // Vertical
+            {
+                if (row + length > BoardSize)
+                {
+                    return false; // Ship goes off the board
+                }
+
+                for (int i = row; i < row + length; i++)
+                {
+                    if (board[i, col] != '\0' || IsAdjacentShip(board, i, col))
+                    {
+                        return false; // Ship intersects with another ship or is adjacent to another ship
+                    }
+                }
             }
 
-
+            return true;
         }
+
+        private bool IsAdjacentShip(char[,] board, int row, int col)
+        {
+            // Check if there is a ship cell in the adjacent positions (horizontal, vertical, and diagonal)
+            for (int i = row - 1; i <= row + 1; i++)
+            {
+                for (int j = col - 1; j <= col + 1; j++)
+                {
+                    if (i >= 0 && i < BoardSize && j >= 0 && j < BoardSize && board[i, j] == 'S')
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        private void PlaceShip(char[,] board, int row, int col, int length, int direction)
+        {
+            if (direction == 0) // Horizontal
+            {
+                for (int i = col; i < col + length; i++)
+                {
+                    board[row, i] = 'S';
+                }
+            }
+            else // Vertical
+            {
+                for (int i = row; i < row + length; i++)
+                {
+                    board[i, col] = 'S';
+                }
+            }
+        }
+
 
         public int PlayerAttack(int row, int col)
         {

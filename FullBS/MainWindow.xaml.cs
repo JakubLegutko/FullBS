@@ -62,7 +62,7 @@ namespace WarshipsGame
 
         public string GameStatus
         {
-            get { return (gameEngine.IsGameOver() == 1 || gameEngine.IsGameOver() == 2) ? "Game Over!" : "Player's Turn"; }
+            get { return (gameEngine.IsGameOver() == 1 || gameEngine.IsGameOver() == 2) ? "Game Over!" : "Left < Player Board, Right > Computer Board, click there"; }
         }
 
 
