@@ -131,6 +131,21 @@ namespace WarshipsGame
                     {
                         ComputerTurn();
 
+                    } else if (gameEngine.IsGameOver() != 0)
+                    {
+                        if (gameEngine.IsGameOver() == 1)
+                        {
+                            MessageBox.Show("Game Over! You lost!");
+                            // Close the application after the user presses OK
+                            Application.Current.Shutdown();
+                        }
+                        else if (gameEngine.IsGameOver() == 2)
+                        {
+                            MessageBox.Show("Game Over! You won!");
+                            // Close the application after the user presses OK
+                            Application.Current.Shutdown();
+                        }
+
                     }
                 }
             }
@@ -144,36 +159,40 @@ namespace WarshipsGame
         private void ComputerTurn()
         {
             int isHit = gameEngine.ComputerAttack();
-            bool validMove = false;
             UpdatePlayerBoard();
             if (isHit == 1)
             {
                 MessageBox.Show("Computer hit a ship!");
                 //validMove = true; Analogous to the player's turn
+                if (gameEngine.IsGameOver() != 0)
+                {
+                    if (gameEngine.IsGameOver() == 1)
+                    {
+                        MessageBox.Show("Game Over! You lost!");
+                        // Close the application after the user presses OK
+                        Application.Current.Shutdown();
+                    }
+                    else if (gameEngine.IsGameOver() == 2)
+                    {
+                        MessageBox.Show("Game Over! You won!");
+                        // Close the application after the user presses OK
+                        Application.Current.Shutdown();
+                    }
+
+                }
                 ComputerTurn();
             }
             else if (isHit == 2)
             {
                 MessageBox.Show("Computer missed!");
-                validMove = true;
             }
             else
             {
-                validMove = false;
+                //Field already hit
+                ComputerTurn();
             }
 
-            if (gameEngine.IsGameOver() != 0 && validMove)
-            {
-                if (gameEngine.IsGameOver() == 1)
-                {
-                    MessageBox.Show("Game Over! You lost!");
-                }
-                else if (gameEngine.IsGameOver() == 2)
-                {
-                    MessageBox.Show("Game Over! You won!");
-                }
-
-            }
+ 
         }
 
         private void UpdatePlayerBoard()
